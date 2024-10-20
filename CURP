@@ -1,0 +1,15 @@
+pet_shop/
+│
+├── usuarios.php            --> Página principal del CRUD (Listar, Crear, Editar, Eliminar)
+├── db.php                  --> Conexión a la base de datos
+└── sesiones/               --> Control de sesiones
+    └── session_start.php   --> Iniciar sesión de usuario
+    <?php
+try {
+    $db = new PDO('mysql:host=localhost;dbname=tienda_mascotas', 'root', '');  // Ajusta las credenciales
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Error: " . $e->getMessage());
+}
+?>
+<?php
