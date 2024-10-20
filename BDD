@@ -1,0 +1,82 @@
+CREATE DATABASE TiendaDeMascotas;
+USE TiendaDeMascotas;
+
+CREATE TABLE Clientes(
+  ID_Personas INT PRIMARY KEY,
+  Cedula VARVHAR(20),
+  Nombre VARCHAR(20)
+);
+
+CREATE TABLE Mascotas(
+  ID_Mascota INT PRIMARY KEY,
+  Cod_Mascota VARCHAR(20),
+  Dueño INT,
+  FOREIGN KEY (Dueño) REFERENCES Clientes(ID_Persona)
+);
+
+CREATE TABLE Tipo_Mascotas (
+  ID_TipoMascota INT PRIMARY KEY,
+  TipoDeMascota VARCHAR(50),
+  Nombre VARCHAR(100),
+  Genero VARCHAR(10),
+  Edad INT,
+  Mascota INT,
+  FOREIGN KEY (Mascota) REFERENCES Mascotas(ID_Mascota)
+);
+
+CREATE TABLE Facturas (
+  ID_Factura INT PRIMARY KEY,
+  Codigo_Factura VARCHAR(50),
+  Fecha DATE,
+  TOTAL DECIMAL(10, 2),
+  Cliente INT,
+  Mascota INT,
+  Servicio INT,
+  Pago INT,
+  FOREIGN KEY (Cliente) REFERENCES Clientes(ID_Persona),
+  FOREIGN KEY (Mascota) REFERENCES Mascotas(ID_Mascota),
+  FOREIGN KEY (Servicio) REFERENCES Servicios(ID_Servicio),
+  FOREIGN KEY (Pago) REFERENCES Metodo_Pago(ID_Pago)
+);
+
+CREATE TABLE Servicios (
+  ID_Servicio INT PRIMARY KEY,
+  Nombre_Servicio VARCHAR(100),
+  Precio DECIMAL(10, 2),
+  Estado VARCHAR(20),
+  Mascota INT,
+  FOREIGN KEY (Mascota) REFERENCES Mascotas(ID_Mascota)
+);
+
+CREATE TABLE Metodo_Pago (
+  ID_Pago INT PRIMARY KEY,
+  Tipo_Pago VARCHAR(50)
+);
+
+CREATE TABLE Tipo_Servicios (
+  ID_TipoServicio INT PRIMARY KEY,
+  Servicio VARCHAR(100)
+);
+
+CREATE INDEX idx_usuario_mascota ON Mascotas(ID_Usuario);
+CREATE INDEX idx_factura_usuario ON Facturas(ID_Usuario);
+
+DELIMITER //
+CREATE PROCEDURE InsertarFactura(
+    IN p_Codigo_Factura VARCHAR(50), 
+    IN p_Fecha DATE, 
+    IN p_Total DECIMAL(10, 2),
+    IN p_ID_Usuario INT,
+    IN p_ID_Mascota INT,
+    IN p_ID_Servicio INT,
+    IN p_ID_Pago INT
+)
+BEGIN
+  INSERT INTO Facturas(Codigo_Factura, Fecha, Total, ID_Usuario, ID_Mascota, ID_Servicio, ID_Pago)
+  VALUES(p_Codigo_Factura, p_Fecha, p_Total, p_ID_Usuario, p_ID_Mascota, p_ID_Servicio, p_ID_Pago);
+END //
+DELIMITER ;
+
+
+
+
